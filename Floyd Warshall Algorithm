@@ -1,0 +1,66 @@
+#include <stdio.h>
+    int dist[MAX_N][MAX_N];
+
+    // Initialize the distance matrix with input graph
+    for (int i = 0; i < V; i++)
+        for (int j = 0; j < V; j++)
+            dist[i][j] = graph[i][j];
+
+    // Floyd-Warshall Algorithm
+    for (int k = 0; k < V; k++) {
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                if (dist[i][k] != INF && dist[k][j] != INF
+                    && dist[i][k] + dist[k][j] < dist[i][j]) {
+                    dist[i][j] = dist[i][k] + dist[k][j];
+                }
+            }
+        }
+    }
+
+    // Print the final distance matrix
+    printf("The following matrix shows the shortest distances between all pairs of the vertices.\n");
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            if (dist[i][j] == INF)
+                printf("%5s", "INF");
+            else
+                printf("%5d", dist[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int V, E;
+    int graph[MAX_N][MAX_N];
+
+    printf("Enter the number of vertices : ");
+    scanf("%d", &V);
+
+    printf("Enter the number of edges : ");
+    scanf("%d", &E);
+
+    // Initialize graph with INF and 0 for diagonal
+    for (int i = 0; i < V; i++)
+        for (int j = 0; j < V; j++)
+            graph[i][j] = (i == j) ? 0 : INF;
+
+    // Read edges
+    for (int i = 0; i < E; i++) {
+        int u, v, w;
+        printf("Enter source : ");
+        scanf("%d", &u);
+        printf("Enter destination : ");
+        scanf("%d", &v);
+        printf("Enter weight : ");
+        scanf("%d", &w);
+        graph[u - 1][v - 1] = w;  // Convert to 0-based indexing
+    }
+
+    // Run Floyd-Warshall
+    floydWarshall(graph, V);
+
+    return 0;
+}
+
